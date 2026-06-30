@@ -1,25 +1,17 @@
-# My First Website
+# Compensation comparison
 
-This is my very first website! I'm learning the basics of web development.
+This is a test of Storecode to create a web page showing people their total compensation (salary plus pension) to help them evaluate new job offers.
 
 ## What's Inside
 
-A simple HTML page that displays "Hello World" and demonstrates:
-- HTML structure
-- CSS styling
-- Lists and links
-- Text formatting
+A landing page with information about the service
 
 ## How to View
 
 Simply open `index.html` in your web browser.
 
-## What I'm Learning
+## What's next
 
-- HTML - the structure of web pages
-- CSS - making things look good
-- Git and GitHub - version control
-
----
-
-Built while learning to code!
+- Make the service dynamic
+- Add Storebrand design
+- ???
