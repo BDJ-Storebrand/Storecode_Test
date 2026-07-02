@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Din kompensasjonssammenligning - Storebrand</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background-color: #fffffa;
+        }
+
+        /* Header/Navigation */
+        header {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        .header-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            max-width: 200px;
+            height: auto;
+        }
+
+        .back-link {
+            color: #560000;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-link:hover {
+            color: #da291c;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Page Title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-title h1 {
+            color: #560000;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .page-title p {
+            color: #4a4a4a;
+            font-size: 1.1em;
+        }
+
+        /* Summary Cards */
+        .summary-section {
+            margin-bottom: 60px;
+        }
+
+        .summary-section h2 {
+            color: #560000;
+            font-size: 2em;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 30px;
+            border-radius: 4px;
+            border-left: 4px solid #da291c;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        .summary-card h3 {
+            color: #560000;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+            margin-top: 10px;
+            padding-top: 15px;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .summary-label {
+            color: #4a4a4a;
+        }
+
+        .summary-value {
+            color: #560000;
+            font-weight: 600;
+        }
+
+        /* Difference Card */
+        .difference-card {
+            background: linear-gradient(135deg, #f9ece8 0%, #fac8c8 100%);
+            padding: 40px;
+            border-radius: 4px;
+            border-left: 4px solid #da291c;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+            text-align: center;
+        }
+
+        .difference-card h3 {
+            color: #560000;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .difference-amount {
+            color: #560000;
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .difference-amount.positive {
+            color: #00a876;
+        }
+
+        .difference-amount.negative {
+            color: #da291c;
+        }
+
+        .difference-percentage {
+            color: #4a4a4a;
+            font-size: 1.2em;
+        }
+
+        /* 5-Year Projection */
+        .projection-section {
+            margin-bottom: 60px;
+        }
+
+        .projection-section h2 {
+            color: #560000;
+            font-size: 2em;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .projection-subtitle {
+            text-align: center;
+            color: #4a4a4a;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: white;
+            padding: 40px;
+            border-radius: 4px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+            margin-bottom: 20px;
+        }
+
+        /* Table */
+        .projection-table {
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #560000;
+            color: white;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        th.number {
+            text-align: right;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f9ece8;
+        }
+
+        td {
+            padding: 15px;
+        }
+
+        td.number {
+            text-align: right;
+            font-weight: 600;
+            color: #560000;
+        }
+
+        .highlight-row {
+            background: #fac8c8 !important;
+            font-weight: 600;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: #da291c;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary:hover {
+            background-color: #ed554e;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: #560000;
+            border: 2px solid #da291c;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-secondary:hover {
+            background-color: #fac8c8;
+            border-color: #ed554e;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-title h1 {
+                font-size: 2em;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .difference-amount {
+                font-size: 2.5em;
+            }
+
+            .chart-wrapper {
+                height: 300px;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <img src="storebrand-logo.svg" alt="Storebrand" class="logo">
+            <a href="calculator.html" class="back-link">
+                <span>←</span> Endre tall
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-title">
+            <h1>Din kompensasjonssammenligning</h1>
+            <p>Oversikt over total kompensasjon (lønn + pensjon)</p>
+        </div>
+
+        <!-- 1-Year Summary -->
+        <section class="summary-section">
+            <h2>Sammenligning for 2026</h2>
+
+            <div class="summary-grid">
+                <!-- Current Job -->
+                <div class="summary-card">
+                    <h3>Nåværende jobb</h3>
+                    <div class="summary-row">
+                        <span class="summary-label">Årslønn</span>
+                        <span class="summary-value" id="current-salary-display">-</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Pensjonssparing</span>
+                        <span class="summary-value" id="current-pension-display">-</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Total kompensasjon</span>
+                        <span class="summary-value" id="current-total-display">-</span>
+                    </div>
+                </div>
+
+                <!-- New Job -->
+                <div class="summary-card">
+                    <h3>Nytt jobbtilbud</h3>
+                    <div class="summary-row">
+                        <span class="summary-label">Årslønn</span>
+                        <span class="summary-value" id="new-salary-display">-</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Pensjonssparing</span>
+                        <span class="summary-value" id="new-pension-display">-</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Total kompensasjon</span>
+                        <span class="summary-value" id="new-total-display">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Difference -->
+            <div class="difference-card">
+                <h3>Årlig forskjell</h3>
+                <div class="difference-amount" id="difference-amount">-</div>
+                <div class="difference-percentage" id="difference-percentage">-</div>
+            </div>
+        </section>
+
+        <!-- 5-Year Projection -->
+        <section class="projection-section">
+            <h2>5-års fremskrivning</h2>
+            <p class="projection-subtitle">Basert på 3,5% årlig lønnsøkning</p>
+
+            <!-- Chart -->
+            <div class="chart-container">
+                <div class="chart-wrapper">
+                    <canvas id="projectionChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="projection-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>År</th>
+                            <th class="number">Nåværende jobb</th>
+                            <th class="number">Nytt tilbud</th>
+                            <th class="number">Forskjell</th>
+                        </tr>
+                    </thead>
+                    <tbody id="projection-table-body">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                    <tfoot>
+                        <tr class="highlight-row">
+                            <td><strong>Sum 5 år</strong></td>
+                            <td class="number" id="total-current-5yr">-</td>
+                            <td class="number" id="total-new-5yr">-</td>
+                            <td class="number" id="total-diff-5yr">-</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+
+        <!-- Actions -->
+        <div class="button-group">
+            <a href="calculator.html" class="btn btn-secondary">
+                <span>←</span>
+                <span>Endre tall</span>
+            </a>
+            <button onclick="window.print()" class="btn btn-primary">Skriv ut sammenligning</button>
+        </div>
+    </div>
+
+    <script>
+        // Constants
+        const G_VALUE_2026 = 124028; // Grunnbeløpet
+        const G_7_1 = G_VALUE_2026 * 7.1;  // 880,599 kr
+        const G_12 = G_VALUE_2026 * 12;    // 1,488,336 kr
+        const ANNUAL_SALARY_INCREASE = 0.035; // 3.5% yearly increase
+
+        // Load data and calculate
+        window.addEventListener('DOMContentLoaded', () => {
+            const data = loadCompensationData();
+
+            if (!data) {
+                alert('Ingen data funnet. Vennligst fyll ut kalkulatoren først.');
+                window.location.href = 'calculator.html';
+                return;
+            }
+
+            calculateAndDisplay(data);
+        });
+
+        // Load data from localStorage
+        function loadCompensationData() {
+            const savedData = localStorage.getItem('compensationData');
+            if (!savedData) return null;
+
+            const data = JSON.parse(savedData);
+
+            return {
+                currentSalary: parseFloat(data.currentSalary.replace(/\s/g, '')),
+                currentPensionLow: parseFloat(data.currentPensionLow.replace(',', '.')),
+                currentPensionHigh: parseFloat(data.currentPensionHigh.replace(',', '.')),
+                newSalary: parseFloat(data.newSalary.replace(/\s/g, '')),
+                newPensionLow: parseFloat(data.newPensionLow.replace(',', '.')),
+                newPensionHigh: parseFloat(data.newPensionHigh.replace(',', '.'))
+            };
+        }
+
+        // Calculate pension contribution
+        function calculatePension(salary, rateLow, rateHigh) {
+            let pension = 0;
+
+            if (salary <= G_7_1) {
+                // All salary is in the low bracket
+                pension = salary * (rateLow / 100);
+            } else if (salary <= G_12) {
+                // Salary spans both brackets
+                const lowBracket = G_7_1 * (rateLow / 100);
+                const highBracket = (salary - G_7_1) * (rateHigh / 100);
+                pension = lowBracket + highBracket;
+            } else {
+                // Salary exceeds max, only contribute up to 12G
+                const lowBracket = G_7_1 * (rateLow / 100);
+                const highBracket = (G_12 - G_7_1) * (rateHigh / 100);
+                pension = lowBracket + highBracket;
+            }
+
+            return pension;
+        }
+
+        // Format number as currency
+        function formatCurrency(amount) {
+            return Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' kr';
+        }
+
+        // Calculate and display results
+        function calculateAndDisplay(data) {
+            // Year 1 calculations
+            const currentPension1 = calculatePension(
+                data.currentSalary,
+                data.currentPensionLow,
+                data.currentPensionHigh
+            );
+            const currentTotal1 = data.currentSalary + currentPension1;
+
+            const newPension1 = calculatePension(
+                data.newSalary,
+                data.newPensionLow,
+                data.newPensionHigh
+            );
+            const newTotal1 = data.newSalary + newPension1;
+
+            const difference1 = newTotal1 - currentTotal1;
+            const differencePercent = (difference1 / currentTotal1) * 100;
+
+            // Display Year 1
+            document.getElementById('current-salary-display').textContent = formatCurrency(data.currentSalary);
+            document.getElementById('current-pension-display').textContent = formatCurrency(currentPension1);
+            document.getElementById('current-total-display').textContent = formatCurrency(currentTotal1);
+
+            document.getElementById('new-salary-display').textContent = formatCurrency(data.newSalary);
+            document.getElementById('new-pension-display').textContent = formatCurrency(newPension1);
+            document.getElementById('new-total-display').textContent = formatCurrency(newTotal1);
+
+            const diffElement = document.getElementById('difference-amount');
+            diffElement.textContent = formatCurrency(Math.abs(difference1));
+            diffElement.className = 'difference-amount ' + (difference1 >= 0 ? 'positive' : 'negative');
+
+            const diffPercentElement = document.getElementById('difference-percentage');
+            diffPercentElement.textContent = (difference1 >= 0 ? '+' : '') + differencePercent.toFixed(1) + '% sammenlignet med nåværende jobb';
+
+            // 5-year projection
+            calculate5YearProjection(data, data.currentSalary);
+        }
+
+        // Calculate 5-year projection
+        function calculate5YearProjection(data, baseSalary) {
+            const projectionData = {
+                years: [],
+                currentJob: [],
+                newJob: [],
+                differences: [],
+                baseSalary: baseSalary
+            };
+
+            let currentSalary = data.currentSalary;
+            let newSalary = data.newSalary;
+
+            for (let year = 0; year < 5; year++) {
+                const yearLabel = 2026 + year;
+
+                // Calculate pension for this year
+                const currentPension = calculatePension(
+                    currentSalary,
+                    data.currentPensionLow,
+                    data.currentPensionHigh
+                );
+                const currentTotal = currentSalary + currentPension;
+
+                const newPension = calculatePension(
+                    newSalary,
+                    data.newPensionLow,
+                    data.newPensionHigh
+                );
+                const newTotal = newSalary + newPension;
+
+                const difference = newTotal - currentTotal;
+
+                projectionData.years.push(yearLabel);
+                projectionData.currentJob.push(currentTotal);
+                projectionData.newJob.push(newTotal);
+                projectionData.differences.push(difference);
+
+                // Apply salary increase for next year
+                if (year < 4) {
+                    currentSalary *= (1 + ANNUAL_SALARY_INCREASE);
+                    newSalary *= (1 + ANNUAL_SALARY_INCREASE);
+                }
+            }
+
+            // Display table
+            displayProjectionTable(projectionData);
+
+            // Display chart
+            drawChart(projectionData);
+        }
+
+        // Display projection table
+        function displayProjectionTable(data) {
+            const tbody = document.getElementById('projection-table-body');
+            tbody.innerHTML = '';
+
+            let totalCurrent = 0;
+            let totalNew = 0;
+            let totalDiff = 0;
+
+            data.years.forEach((year, index) => {
+                const currentTotal = data.currentJob[index];
+                const newTotal = data.newJob[index];
+                const diff = data.differences[index];
+
+                totalCurrent += currentTotal;
+                totalNew += newTotal;
+                totalDiff += diff;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${year}</td>
+                    <td class="number">${formatCurrency(currentTotal)}</td>
+                    <td class="number">${formatCurrency(newTotal)}</td>
+                    <td class="number" style="color: ${diff >= 0 ? '#00a876' : '#da291c'}">${diff >= 0 ? '+' : ''}${formatCurrency(diff)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            // Display totals
+            document.getElementById('total-current-5yr').textContent = formatCurrency(totalCurrent);
+            document.getElementById('total-new-5yr').textContent = formatCurrency(totalNew);
+            document.getElementById('total-diff-5yr').textContent = (totalDiff >= 0 ? '+' : '') + formatCurrency(totalDiff);
+            document.getElementById('total-diff-5yr').style.color = totalDiff >= 0 ? '#00a876' : '#da291c';
+        }
+
+        // Draw chart
+        function drawChart(data) {
+            const canvas = document.getElementById('projectionChart');
+            const ctx = canvas.getContext('2d');
+
+            // Set canvas size
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+
+            const paddingLeft = 100;  // More space for y-axis labels
+            const paddingRight = 40;
+            const paddingTop = 60;
+            const paddingBottom = 60;
+            const chartWidth = canvas.width - paddingLeft - paddingRight;
+            const chartHeight = canvas.height - paddingTop - paddingBottom;
+
+            // Find max value for scaling
+            const maxValue = Math.max(...data.currentJob, ...data.newJob);
+            // Use base salary as minimum instead of calculated minimum
+            const minValue = data.baseSalary;
+            const valueRange = maxValue - minValue;
+            const scale = chartHeight / (valueRange * 1.1);
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw grid lines
+            ctx.strokeStyle = '#e5e5e5';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const y = paddingTop + (chartHeight / 5) * i;
+                ctx.beginPath();
+                ctx.moveTo(paddingLeft, y);
+                ctx.lineTo(canvas.width - paddingRight, y);
+                ctx.stroke();
+            }
+
+            // Draw axes
+            ctx.strokeStyle = '#560000';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(paddingLeft, paddingTop);
+            ctx.lineTo(paddingLeft, canvas.height - paddingBottom);
+            ctx.lineTo(canvas.width - paddingRight, canvas.height - paddingBottom);
+            ctx.stroke();
+
+            // Calculate column dimensions
+            const numYears = data.years.length;
+            const groupWidth = chartWidth / numYears;
+            const columnWidth = (groupWidth * 0.7) / 2; // 70% of group width, divided by 2 columns
+            const columnGap = columnWidth * 0.2;
+            const baselineY = canvas.height - paddingBottom;
+
+            function getY(value) {
+                return baselineY - ((value - minValue) * scale);
+            }
+
+            function getColumnHeight(value) {
+                return (value - minValue) * scale;
+            }
+
+            // Draw clustered columns
+            data.years.forEach((year, index) => {
+                const groupX = paddingLeft + (index * groupWidth);
+                const groupCenterX = groupX + (groupWidth / 2);
+
+                // Current job column (dark red)
+                const currentJobValue = data.currentJob[index];
+                const currentJobHeight = getColumnHeight(currentJobValue);
+                const currentJobX = groupCenterX - columnWidth - (columnGap / 2);
+                const currentJobY = getY(currentJobValue);
+
+                ctx.fillStyle = '#B20000';
+                ctx.fillRect(currentJobX, currentJobY, columnWidth, currentJobHeight);
+
+                // Add subtle border
+                ctx.strokeStyle = '#560000';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(currentJobX, currentJobY, columnWidth, currentJobHeight);
+
+                // New job column (light red/pink)
+                const newJobValue = data.newJob[index];
+                const newJobHeight = getColumnHeight(newJobValue);
+                const newJobX = groupCenterX + (columnGap / 2);
+                const newJobY = getY(newJobValue);
+
+                ctx.fillStyle = '#ffdfdf';
+                ctx.fillRect(newJobX, newJobY, columnWidth, newJobHeight);
+
+                // Add subtle border
+                ctx.strokeStyle = '#B20000';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(newJobX, newJobY, columnWidth, newJobHeight);
+            });
+
+            // Draw labels
+            ctx.fillStyle = '#560000';
+            ctx.font = '14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+            ctx.textAlign = 'center';
+
+            // Year labels
+            data.years.forEach((year, index) => {
+                const groupX = paddingLeft + (index * groupWidth);
+                const groupCenterX = groupX + (groupWidth / 2);
+                ctx.fillText(year.toString(), groupCenterX, canvas.height - paddingBottom + 25);
+            });
+
+            // Value labels on Y-axis
+            ctx.textAlign = 'right';
+            ctx.font = '13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+            for (let i = 0; i <= 5; i++) {
+                const value = minValue + (valueRange * 1.1 / 5) * (5 - i);
+                const y = paddingTop + (chartHeight / 5) * i;
+                const formattedValue = Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' kr';
+                ctx.fillText(formattedValue, paddingLeft - 10, y + 5);
+            }
+
+            // Legend
+            ctx.font = 'bold 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+
+            const legendY = 25;
+            const legendX = paddingLeft;
+
+            ctx.fillStyle = '#B20000';
+            ctx.fillRect(legendX, legendY - 8, 20, 12);
+            ctx.strokeStyle = '#560000';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(legendX, legendY - 8, 20, 12);
+            ctx.fillStyle = '#560000';
+            ctx.textAlign = 'left';
+            ctx.fillText('Nåværende jobb', legendX + 30, legendY);
+
+            ctx.fillStyle = '#ffdfdf';
+            ctx.fillRect(legendX + 180, legendY - 8, 20, 12);
+            ctx.strokeStyle = '#B20000';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(legendX + 180, legendY - 8, 20, 12);
+            ctx.fillStyle = '#560000';
+            ctx.fillText('Nytt tilbud', legendX + 210, legendY);
+        }
+
+        // Redraw chart on window resize
+        window.addEventListener('resize', () => {
+            const data = loadCompensationData();
+            if (data) {
+                calculate5YearProjection(data, data.currentSalary);
+            }
+        });
+    </script>
+</body>
+</html>
