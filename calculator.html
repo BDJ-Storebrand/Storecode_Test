@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kompensasjonskalkulator - Storebrand</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background-color: #fffffa;
+        }
+
+        /* Header/Navigation */
+        header {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        .header-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            max-width: 200px;
+            height: auto;
+        }
+
+        .back-link {
+            color: #560000;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-link:hover {
+            color: #da291c;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Page Title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-title h1 {
+            color: #560000;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .page-title p {
+            color: #4a4a4a;
+            font-size: 1.1em;
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        /* Job Card */
+        .job-card {
+            background: white;
+            padding: 40px;
+            border-radius: 4px;
+            border-left: 4px solid #da291c;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        .job-card h2 {
+            color: #560000;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .job-card .subtitle {
+            color: #4a4a4a;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #560000;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .form-group .help-text {
+            display: block;
+            color: #7f7f7f;
+            font-size: 0.85em;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        .form-group .error-text {
+            display: block;
+            color: #da291c;
+            font-size: 0.85em;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+        .form-group.has-error input {
+            border-color: #da291c;
+            background-color: #fff5f5;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #c0c0c0;
+            border-radius: 4px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #da291c;
+            box-shadow: 0 0 0 3px rgba(218, 41, 28, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #bdb6a8;
+        }
+
+        /* Pension Group */
+        .pension-group {
+            background: #f9ece8;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 25px;
+        }
+
+        .pension-group h3 {
+            color: #560000;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .pension-fields {
+            display: grid;
+            gap: 20px;
+        }
+
+        /* Input with suffix */
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-suffix {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f7f7f;
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        .input-wrapper input {
+            padding-right: 45px;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background-color: #da291c;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary:hover {
+            background-color: #ed554e;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary:disabled {
+            background-color: #c0c0c0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: #560000;
+            border: 2px solid #da291c;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-secondary:hover {
+            background-color: #fac8c8;
+            border-color: #ed554e;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #f9ece8;
+            border-left: 4px solid #da291c;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+        }
+
+        .info-box h3 {
+            color: #560000;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .info-box p {
+            color: #4a4a4a;
+            line-height: 1.7;
+            font-size: 0.95em;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .info-box li {
+            color: #4a4a4a;
+            line-height: 1.7;
+            font-size: 0.95em;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title h1 {
+                font-size: 2em;
+            }
+
+            .job-card {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <img src="storebrand-logo.svg" alt="Storebrand" class="logo">
+            <a href="index.html" class="back-link">
+                <span>←</span> Tilbake til forsiden
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-title">
+            <h1>Sammenlign din totale kompensasjon</h1>
+            <p>Legg inn informasjon om din nåværende og potensielle nye jobb</p>
+        </div>
+
+        <!-- Info Box -->
+        <div class="info-box">
+            <h3>💡 Om pensjonsberegningen</h3>
+            <p>I Norge er pensjonssparing delt i to trinn basert på inntekt opp til folketrygdens grunnbeløp (G):</p>
+            <ul>
+                <li><strong>0-7,1G:</strong> Lavere sats - vanligvis 2-5% av lønn</li>
+                <li><strong>7,1G-12G:</strong> Høyere sats - vanligvis 8-25% av lønn over 7,1G</li>
+            </ul>
+            <p style="margin-top: 10px;"><em>Grunnbeløpet (G) i 2026 er kr 124 028</em></p>
+        </div>
+
+        <!-- Form Grid -->
+        <form id="compensationForm">
+            <div class="form-grid">
+                <!-- Current Job Card -->
+                <div class="job-card">
+                    <h2>Nåværende jobb</h2>
+                    <p class="subtitle">Din nåværende stilling og kompensasjon</p>
+
+                    <div class="form-group">
+                        <label for="current-salary">Årslønn (brutto)</label>
+                        <div class="input-wrapper">
+                            <input
+                                type="text"
+                                id="current-salary"
+                                name="currentSalary"
+                                placeholder="650 000"
+                                data-type="salary"
+                                required
+                            >
+                            <span class="input-suffix">kr</span>
+                        </div>
+                        <span class="help-text">Din totale brutto årslønn før skatt</span>
+                    </div>
+
+                    <div class="pension-group">
+                        <h3>Pensjonssparing</h3>
+                        <div class="pension-fields">
+                            <div class="form-group">
+                                <label for="current-pension-low">Pensjonssats 0-7,1G</label>
+                                <div class="input-wrapper">
+                                    <input
+                                        type="text"
+                                        id="current-pension-low"
+                                        name="currentPensionLow"
+                                        placeholder="5"
+                                        data-type="pension-low"
+                                        required
+                                    >
+                                    <span class="input-suffix">%</span>
+                                </div>
+                                <span class="help-text">Arbeidsgivers innskudd på lønn opp til 7,1G (880 599 kr). Lovlig minimum: 2%, maks: 7%</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="current-pension-high">Pensjonssats 7,1G-12G</label>
+                                <div class="input-wrapper">
+                                    <input
+                                        type="text"
+                                        id="current-pension-high"
+                                        name="currentPensionHigh"
+                                        placeholder="8"
+                                        data-type="pension-high"
+                                        required
+                                    >
+                                    <span class="input-suffix">%</span>
+                                </div>
+                                <span class="help-text">Arbeidsgivers innskudd på lønn mellom 7,1G og 12G (1 488 336 kr). Maks: 25,1%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New Job Card -->
+                <div class="job-card">
+                    <h2>Nytt jobbtilbud</h2>
+                    <p class="subtitle">Den stillingen du vurderer</p>
+
+                    <div class="form-group">
+                        <label for="new-salary">Årslønn (brutto)</label>
+                        <div class="input-wrapper">
+                            <input
+                                type="text"
+                                id="new-salary"
+                                name="newSalary"
+                                placeholder="700 000"
+                                data-type="salary"
+                                required
+                            >
+                            <span class="input-suffix">kr</span>
+                        </div>
+                        <span class="help-text">Brutto årslønn i det nye tilbudet før skatt</span>
+                    </div>
+
+                    <div class="pension-group">
+                        <h3>Pensjonssparing</h3>
+                        <div class="pension-fields">
+                            <div class="form-group">
+                                <label for="new-pension-low">Pensjonssats 0-7,1G</label>
+                                <div class="input-wrapper">
+                                    <input
+                                        type="text"
+                                        id="new-pension-low"
+                                        name="newPensionLow"
+                                        placeholder="5"
+                                        data-type="pension-low"
+                                        required
+                                    >
+                                    <span class="input-suffix">%</span>
+                                </div>
+                                <span class="help-text">Arbeidsgivers innskudd på lønn opp til 7,1G (880 599 kr). Lovlig minimum: 2%, maks: 7%</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="new-pension-high">Pensjonssats 7,1G-12G</label>
+                                <div class="input-wrapper">
+                                    <input
+                                        type="text"
+                                        id="new-pension-high"
+                                        name="newPensionHigh"
+                                        placeholder="8"
+                                        data-type="pension-high"
+                                        required
+                                    >
+                                    <span class="input-suffix">%</span>
+                                </div>
+                                <span class="help-text">Arbeidsgivers innskudd på lønn mellom 7,1G og 12G (1 488 336 kr). Maks: 25,1%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <button type="button" class="btn btn-secondary" id="clearBtn">Nullstill</button>
+                <button type="submit" class="btn btn-primary" id="calculateBtn">Beregn kompensasjon</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Validation rules
+        const VALIDATION_RULES = {
+            'pension-low': { min: 2, max: 7, label: 'Pensjonssats 0-7,1G' },
+            'pension-high': { min: 0, max: 25.1, label: 'Pensjonssats 7,1G-12G' }
+        };
+
+        // Load saved data on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadFormData();
+            setupInputHandlers();
+        });
+
+        const form = document.getElementById('compensationForm');
+
+        // Setup input handlers for formatting and validation
+        function setupInputHandlers() {
+            const inputs = form.querySelectorAll('input');
+
+            inputs.forEach(input => {
+                const inputType = input.dataset.type;
+
+                // Handle input formatting and validation
+                input.addEventListener('input', (e) => {
+                    if (inputType === 'salary') {
+                        formatSalaryInput(e.target);
+                    } else if (inputType === 'pension-low' || inputType === 'pension-high') {
+                        formatPensionInput(e.target);
+                    }
+                });
+
+                // Validate on blur
+                input.addEventListener('blur', (e) => {
+                    validateInput(e.target);
+                    saveFormData();
+                });
+            });
+        }
+
+        // Format salary input with thousand separators
+        function formatSalaryInput(input) {
+            // Remove all non-digit characters
+            let value = input.value.replace(/\D/g, '');
+
+            // Prevent negative numbers
+            if (value === '' || value === '0') {
+                input.value = '';
+                return;
+            }
+
+            // Remove leading zeros
+            value = value.replace(/^0+/, '');
+
+            // Add thousand separators (space)
+            const formatted = value.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+            input.value = formatted;
+
+            // Clear any previous errors
+            clearError(input);
+        }
+
+        // Format pension input (allow decimals)
+        function formatPensionInput(input) {
+            let value = input.value;
+
+            // Only allow digits, one decimal point, and one decimal place
+            value = value.replace(/[^\d,\.]/g, '');
+
+            // Replace comma with period
+            value = value.replace(',', '.');
+
+            // Only allow one decimal point
+            const parts = value.split('.');
+            if (parts.length > 2) {
+                value = parts[0] + '.' + parts.slice(1).join('');
+            }
+
+            // Limit to one decimal place
+            if (parts.length === 2 && parts[1].length > 1) {
+                value = parts[0] + '.' + parts[1].substring(0, 1);
+            }
+
+            input.value = value;
+        }
+
+        // Validate input based on type
+        function validateInput(input) {
+            const inputType = input.dataset.type;
+            const value = parseInputValue(input);
+            const formGroup = input.closest('.form-group');
+
+            // Clear previous errors
+            clearError(input);
+
+            if (!value && value !== 0) {
+                return; // Empty is handled by required attribute
+            }
+
+            // Validate salary
+            if (inputType === 'salary') {
+                if (value < 0) {
+                    showError(input, 'Lønnen kan ikke være negativ');
+                    return false;
+                }
+                if (value === 0) {
+                    showError(input, 'Vennligst oppgi en gyldig lønn');
+                    return false;
+                }
+            }
+
+            // Validate pension rates
+            if (inputType === 'pension-low' || inputType === 'pension-high') {
+                const rules = VALIDATION_RULES[inputType];
+
+                if (value < rules.min) {
+                    showError(input, `${rules.label} må være minst ${rules.min}%`);
+                    return false;
+                }
+                if (value > rules.max) {
+                    showError(input, `${rules.label} kan ikke være mer enn ${rules.max}%`);
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // Parse input value to number
+        function parseInputValue(input) {
+            const inputType = input.dataset.type;
+            let value = input.value;
+
+            if (!value) return null;
+
+            if (inputType === 'salary') {
+                // Remove spaces for salary
+                value = value.replace(/\s/g, '');
+            }
+
+            // Replace comma with period for decimals
+            value = value.replace(',', '.');
+
+            return parseFloat(value);
+        }
+
+        // Show validation error
+        function showError(input, message) {
+            const formGroup = input.closest('.form-group');
+            formGroup.classList.add('has-error');
+
+            // Remove existing error message
+            const existingError = formGroup.querySelector('.error-text');
+            if (existingError) {
+                existingError.remove();
+            }
+
+            // Add error message
+            const errorText = document.createElement('span');
+            errorText.className = 'error-text';
+            errorText.textContent = message;
+            input.parentNode.parentNode.appendChild(errorText);
+        }
+
+        // Clear validation error
+        function clearError(input) {
+            const formGroup = input.closest('.form-group');
+            formGroup.classList.remove('has-error');
+
+            const errorText = formGroup.querySelector('.error-text');
+            if (errorText) {
+                errorText.remove();
+            }
+        }
+
+        // Form submission
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Validate all inputs
+            const inputs = form.querySelectorAll('input');
+            let isValid = true;
+
+            inputs.forEach(input => {
+                if (!validateInput(input)) {
+                    isValid = false;
+                }
+            });
+
+            if (!isValid) {
+                alert('Vennligst rett opp feilene i skjemaet før du fortsetter.');
+                return;
+            }
+
+            saveFormData();
+            window.location.href = 'results.html';
+        });
+
+        // Clear button
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            if (confirm('Er du sikker på at du vil nullstille alle felt?')) {
+                form.reset();
+                localStorage.removeItem('compensationData');
+
+                // Clear all errors
+                const inputs = form.querySelectorAll('input');
+                inputs.forEach(input => clearError(input));
+            }
+        });
+
+        // Save form data to localStorage
+        function saveFormData() {
+            const formData = {
+                currentSalary: document.getElementById('current-salary').value,
+                currentPensionLow: document.getElementById('current-pension-low').value,
+                currentPensionHigh: document.getElementById('current-pension-high').value,
+                newSalary: document.getElementById('new-salary').value,
+                newPensionLow: document.getElementById('new-pension-low').value,
+                newPensionHigh: document.getElementById('new-pension-high').value,
+                lastUpdated: new Date().toISOString()
+            };
+
+            localStorage.setItem('compensationData', JSON.stringify(formData));
+        }
+
+        // Load form data from localStorage
+        function loadFormData() {
+            const savedData = localStorage.getItem('compensationData');
+
+            if (savedData) {
+                const data = JSON.parse(savedData);
+
+                document.getElementById('current-salary').value = data.currentSalary || '';
+                document.getElementById('current-pension-low').value = data.currentPensionLow || '';
+                document.getElementById('current-pension-high').value = data.currentPensionHigh || '';
+                document.getElementById('new-salary').value = data.newSalary || '';
+                document.getElementById('new-pension-low').value = data.newPensionLow || '';
+                document.getElementById('new-pension-high').value = data.newPensionHigh || '';
+            }
+        }
+    </script>
+</body>
+</html>
