@@ -130,6 +130,14 @@
             color: #4a4a4a;
         }
 
+        .summary-label-detail {
+            display: block;
+            font-size: 0.85em;
+            color: #6b6b6b;
+            margin-top: 3px;
+            font-weight: 400;
+        }
+
         .summary-value {
             color: #560000;
             font-weight: 600;
@@ -360,14 +368,12 @@
     <!-- Main Content -->
     <div class="container">
         <div class="page-title">
-            <h1>Din kompensasjonssammenligning</h1>
+            <h1>Sammenligning</h1>
             <p>Oversikt over total kompensasjon (lønn + pensjon)</p>
         </div>
 
         <!-- 1-Year Summary -->
         <section class="summary-section">
-            <h2>Sammenligning for 2026</h2>
-
             <div class="summary-grid">
                 <!-- Current Job -->
                 <div class="summary-card">
@@ -377,7 +383,10 @@
                         <span class="summary-value" id="current-salary-display">-</span>
                     </div>
                     <div class="summary-row">
-                        <span class="summary-label">Pensjonssparing</span>
+                        <span class="summary-label">
+                            Pensjonssparing
+                            <span class="summary-label-detail" id="current-pension-rates">-</span>
+                        </span>
                         <span class="summary-value" id="current-pension-display">-</span>
                     </div>
                     <div class="summary-row">
@@ -394,7 +403,10 @@
                         <span class="summary-value" id="new-salary-display">-</span>
                     </div>
                     <div class="summary-row">
-                        <span class="summary-label">Pensjonssparing</span>
+                        <span class="summary-label">
+                            Pensjonssparing
+                            <span class="summary-label-detail" id="new-pension-rates">-</span>
+                        </span>
                         <span class="summary-value" id="new-pension-display">-</span>
                     </div>
                     <div class="summary-row">
@@ -462,9 +474,9 @@
 
     <script>
         // Constants
-        const G_VALUE_2026 = 124028; // Grunnbeløpet
-        const G_7_1 = G_VALUE_2026 * 7.1;  // 880,599 kr
-        const G_12 = G_VALUE_2026 * 12;    // 1,488,336 kr
+        const G_VALUE_2026 = 136549; // Grunnbeløpet
+        const G_7_1 = G_VALUE_2026 * 7.1;  // 969,498 kr
+        const G_12 = G_VALUE_2026 * 12;    // 1,638,588 kr
         const ANNUAL_SALARY_INCREASE = 0.035; // 3.5% yearly increase
 
         // Load data and calculate
@@ -502,18 +514,20 @@
             let pension = 0;
 
             if (salary <= G_7_1) {
-                // All salary is in the low bracket
+                // Salary below 7.1G - only apply low rate
                 pension = salary * (rateLow / 100);
             } else if (salary <= G_12) {
-                // Salary spans both brackets
-                const lowBracket = G_7_1 * (rateLow / 100);
-                const highBracket = (salary - G_7_1) * (rateHigh / 100);
-                pension = lowBracket + highBracket;
+                // Salary between 7.1G and 12G
+                // Apply low rate to full salary, plus high rate to amount above 7.1G
+                const basePension = salary * (rateLow / 100);
+                const additionalPension = (salary - G_7_1) * (rateHigh / 100);
+                pension = basePension + additionalPension;
             } else {
-                // Salary exceeds max, only contribute up to 12G
-                const lowBracket = G_7_1 * (rateLow / 100);
-                const highBracket = (G_12 - G_7_1) * (rateHigh / 100);
-                pension = lowBracket + highBracket;
+                // Salary exceeds 12G - cap at 12G
+                // Apply low rate to 12G, plus high rate to amount between 7.1G and 12G
+                const basePension = G_12 * (rateLow / 100);
+                const additionalPension = (G_12 - G_7_1) * (rateHigh / 100);
+                pension = basePension + additionalPension;
             }
 
             return pension;
@@ -548,17 +562,19 @@
             document.getElementById('current-salary-display').textContent = formatCurrency(data.currentSalary);
             document.getElementById('current-pension-display').textContent = formatCurrency(currentPension1);
             document.getElementById('current-total-display').textContent = formatCurrency(currentTotal1);
+            document.getElementById('current-pension-rates').textContent = `${data.currentPensionLow.toString().replace('.', ',')}% / ${data.currentPensionHigh.toString().replace('.', ',')}%`;
 
             document.getElementById('new-salary-display').textContent = formatCurrency(data.newSalary);
             document.getElementById('new-pension-display').textContent = formatCurrency(newPension1);
             document.getElementById('new-total-display').textContent = formatCurrency(newTotal1);
+            document.getElementById('new-pension-rates').textContent = `${data.newPensionLow.toString().replace('.', ',')}% / ${data.newPensionHigh.toString().replace('.', ',')}%`;
 
             const diffElement = document.getElementById('difference-amount');
             diffElement.textContent = formatCurrency(Math.abs(difference1));
             diffElement.className = 'difference-amount ' + (difference1 >= 0 ? 'positive' : 'negative');
 
             const diffPercentElement = document.getElementById('difference-percentage');
-            diffPercentElement.textContent = (difference1 >= 0 ? '+' : '') + differencePercent.toFixed(1) + '% sammenlignet med nåværende jobb';
+            diffPercentElement.textContent = (difference1 >= 0 ? '+' : '') + differencePercent.toFixed(1).replace('.', ',') + '% sammenlignet med nåværende jobb';
 
             // 5-year projection
             calculate5YearProjection(data, data.currentSalary);
