@@ -143,6 +143,103 @@
             font-weight: 600;
         }
 
+        /* Pension savings calculation accordion */
+        .pension-accordion {
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .pension-accordion-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 6px 0 10px;
+            margin: 0;
+            font-family: inherit;
+            font-size: 0.8em;
+            color: #8a6d6d;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .pension-accordion-toggle:hover {
+            color: #da291c;
+        }
+
+        .pension-accordion-chevron {
+            display: inline-block;
+            transition: transform 0.25s ease;
+            font-size: 0.9em;
+        }
+
+        .pension-accordion.open .pension-accordion-chevron {
+            transform: rotate(90deg);
+        }
+
+        .pension-accordion-panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .pension-accordion.open .pension-accordion-panel {
+            max-height: 500px;
+        }
+
+        .pension-accordion-inner {
+            background: #faf3f1;
+            border-radius: 4px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+        }
+
+        .pension-calc-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 12px;
+            padding: 6px 0;
+            font-size: 0.85em;
+        }
+
+        .pension-calc-row .calc-label {
+            color: #4a4a4a;
+        }
+
+        .pension-calc-row .calc-detail {
+            display: block;
+            font-size: 0.9em;
+            color: #8a8a8a;
+            margin-top: 2px;
+            font-weight: 400;
+        }
+
+        .pension-calc-row .calc-value {
+            color: #560000;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .pension-calc-row.calc-total {
+            border-top: 1px solid #e3d3d0;
+            margin-top: 4px;
+            padding-top: 10px;
+            font-weight: 600;
+        }
+
+        .pension-calc-row.calc-total .calc-label {
+            color: #560000;
+        }
+
+        .pension-calc-note {
+            font-size: 0.75em;
+            color: #a08d8d;
+            margin-top: 10px;
+            line-height: 1.4;
+        }
+
         /* Difference Card */
         .difference-card {
             background: linear-gradient(135deg, #f9ece8 0%, #fac8c8 100%);
@@ -389,6 +486,15 @@
                         </span>
                         <span class="summary-value" id="current-pension-display">-</span>
                     </div>
+                    <div class="pension-accordion" id="current-pension-accordion">
+                        <button type="button" class="pension-accordion-toggle" aria-expanded="false" aria-controls="current-pension-panel">
+                            <span class="pension-accordion-chevron">▸</span>
+                            <span>Vis beregning</span>
+                        </button>
+                        <div class="pension-accordion-panel" id="current-pension-panel" role="region">
+                            <div class="pension-accordion-inner" id="current-pension-breakdown"></div>
+                        </div>
+                    </div>
                     <div class="summary-row">
                         <span class="summary-label">Total kompensasjon</span>
                         <span class="summary-value" id="current-total-display">-</span>
@@ -408,6 +514,15 @@
                             <span class="summary-label-detail" id="new-pension-rates">-</span>
                         </span>
                         <span class="summary-value" id="new-pension-display">-</span>
+                    </div>
+                    <div class="pension-accordion" id="new-pension-accordion">
+                        <button type="button" class="pension-accordion-toggle" aria-expanded="false" aria-controls="new-pension-panel">
+                            <span class="pension-accordion-chevron">▸</span>
+                            <span>Vis beregning</span>
+                        </button>
+                        <div class="pension-accordion-panel" id="new-pension-panel" role="region">
+                            <div class="pension-accordion-inner" id="new-pension-breakdown"></div>
+                        </div>
                     </div>
                     <div class="summary-row">
                         <span class="summary-label">Total kompensasjon</span>
@@ -490,6 +605,7 @@
             }
 
             calculateAndDisplay(data);
+            setupPensionAccordions();
         });
 
         // Load data from localStorage
@@ -533,6 +649,61 @@
             return pension;
         }
 
+        // Break the pension contribution into its two savings levels (single year)
+        function getPensionBreakdown(salary, rateLow, rateHigh) {
+            const basis = Math.min(salary, G_12);          // low rate applies up to 12G
+            const level1Amount = basis * (rateLow / 100);  // Grunnsats
+            const level2Base = Math.max(0, basis - G_7_1); // portion between 7.1G and 12G
+            const level2Amount = level2Base * (rateHigh / 100); // Tilleggssats
+            return {
+                basis,
+                level1Amount,
+                level2Base,
+                level2Amount,
+                total: level1Amount + level2Amount
+            };
+        }
+
+        // Render the pension savings breakdown into an accordion panel
+        function renderPensionBreakdown(containerId, salary, rateLow, rateHigh) {
+            const b = getPensionBreakdown(salary, rateLow, rateHigh);
+            const rateLowStr = rateLow.toString().replace('.', ',');
+            const rateHighStr = rateHigh.toString().replace('.', ',');
+
+            document.getElementById(containerId).innerHTML = `
+                <div class="pension-calc-row">
+                    <span class="calc-label">
+                        Grunnsats (${rateLowStr}%)
+                        <span class="calc-detail">${rateLowStr}% av ${formatCurrency(b.basis)} (lønn opptil 12 G)</span>
+                    </span>
+                    <span class="calc-value">${formatCurrency(b.level1Amount)}</span>
+                </div>
+                <div class="pension-calc-row">
+                    <span class="calc-label">
+                        Tilleggssats (${rateHighStr}%)
+                        <span class="calc-detail">${rateHighStr}% av ${formatCurrency(b.level2Base)} (lønn mellom 7,1 G og 12 G)</span>
+                    </span>
+                    <span class="calc-value">${formatCurrency(b.level2Amount)}</span>
+                </div>
+                <div class="pension-calc-row calc-total">
+                    <span class="calc-label">Sum pensjonssparing</span>
+                    <span class="calc-value">${formatCurrency(b.total)}</span>
+                </div>
+                <p class="pension-calc-note">G = grunnbeløpet (${formatCurrency(G_VALUE_2026)} i 2026). 7,1 G = ${formatCurrency(G_7_1)}, 12 G = ${formatCurrency(G_12)}.</p>
+            `;
+        }
+
+        // Wire up the accordion toggles (open/close on click)
+        function setupPensionAccordions() {
+            document.querySelectorAll('.pension-accordion-toggle').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const accordion = btn.closest('.pension-accordion');
+                    const isOpen = accordion.classList.toggle('open');
+                    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                });
+            });
+        }
+
         // Format number as currency
         function formatCurrency(amount) {
             return Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' kr';
@@ -568,6 +739,10 @@
             document.getElementById('new-pension-display').textContent = formatCurrency(newPension1);
             document.getElementById('new-total-display').textContent = formatCurrency(newTotal1);
             document.getElementById('new-pension-rates').textContent = `${data.newPensionLow.toString().replace('.', ',')}% / ${data.newPensionHigh.toString().replace('.', ',')}%`;
+
+            // Pension savings breakdown accordions (year 1)
+            renderPensionBreakdown('current-pension-breakdown', data.currentSalary, data.currentPensionLow, data.currentPensionHigh);
+            renderPensionBreakdown('new-pension-breakdown', data.newSalary, data.newPensionLow, data.newPensionHigh);
 
             const diffElement = document.getElementById('difference-amount');
             diffElement.textContent = formatCurrency(Math.abs(difference1));
