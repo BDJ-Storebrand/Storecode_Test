@@ -331,10 +331,11 @@
             <h3>💡 Om pensjonsberegningen</h3>
             <p>I Norge er pensjonssparing delt i to trinn basert på inntekt opp til folketrygdens grunnbeløp (G):</p>
             <ul>
-                <li><strong>0-12G (kr 0 - kr 1 638 588):</strong> Lavere sats - vanligvis 2-7% av all lønn opp til 12G</li>
-                <li><strong>7,1G-12G (kr 969 498 - kr 1 638 588):</strong> Høyere sats - vanligvis 8-25,1% <em>ekstra</em> på lønn over 7,1G (i tillegg til lavere sats)</li>
+                <li><strong>Grunnsats, 0-12G (kr 0 - kr 1 638 588):</strong> Innskudd på all lønn opp til 12G. Lovlig minimum 2%, maks 7%.</li>
+                <li><strong>Tilleggssats, 7,1G-12G (kr 969 498 - kr 1 638 588):</strong> Inntil 18,1% <em>ekstra</em> på lønn mellom 7,1G og 12G, i tillegg til grunnsatsen. Det finnes ikke noe lovlig minimum – mange ordninger har ingen tilleggssats, og snittet blant dem som har er rundt 9%.</li>
             </ul>
-            <p style="margin-top: 10px;"><em>Grunnbeløpet (G) i 2026 er kr 136 549</em></p>
+            <p style="margin-top: 10px;">Til sammen kan grunnsats og tilleggssats maksimalt utgjøre 25,1% (7% + 18,1%) av lønn mellom 7,1G og 12G. Det gis ikke innskudd på lønn over 12G.</p>
+            <p style="margin-top: 10px;"><em>Grunnbeløpet (G) per 1. mai 2026 er kr 136 549</em></p>
         </div>
 
         <!-- Form Grid -->
@@ -365,7 +366,7 @@
                         <h3>Pensjonssparing</h3>
                         <div class="pension-fields">
                             <div class="form-group">
-                                <label for="current-pension-low">Pensjonssats 0-7,1G</label>
+                                <label for="current-pension-low">Grunnsats 0-12G</label>
                                 <div class="input-wrapper">
                                     <input
                                         type="text"
@@ -377,11 +378,11 @@
                                     >
                                     <span class="input-suffix">%</span>
                                 </div>
-                                <span class="help-text">Arbeidsgivers innskudd på all lønn opp til 12G (1 638 588 kr). Lovlig minimum: 2%, maks: 7%</span>
+                                <span class="help-text">Arbeidsgivers innskudd på all lønn opp til 12G (1 638 588 kr). Lovlig minimum: 2%, maks: 7%. Det gis ikke innskudd på lønn over 12G.</span>
                             </div>
 
                             <div class="form-group">
-                                <label for="current-pension-high">Pensjonssats 7,1G-12G</label>
+                                <label for="current-pension-high">Tilleggssats 7,1G-12G</label>
                                 <div class="input-wrapper">
                                     <input
                                         type="text"
@@ -393,7 +394,7 @@
                                     >
                                     <span class="input-suffix">%</span>
                                 </div>
-                                <span class="help-text">Ekstra innskudd på lønn mellom 7,1G og 12G (969 498 - 1 638 588 kr). Maks: 25,1%</span>
+                                <span class="help-text">Ekstra innskudd på lønn mellom 7,1G og 12G (969 498 - 1 638 588 kr), i tillegg til grunnsatsen. Ingen lovlig minimum, maks: 18,1%</span>
                             </div>
                         </div>
                     </div>
@@ -424,7 +425,7 @@
                         <h3>Pensjonssparing</h3>
                         <div class="pension-fields">
                             <div class="form-group">
-                                <label for="new-pension-low">Pensjonssats 0-7,1G</label>
+                                <label for="new-pension-low">Grunnsats 0-12G</label>
                                 <div class="input-wrapper">
                                     <input
                                         type="text"
@@ -436,11 +437,11 @@
                                     >
                                     <span class="input-suffix">%</span>
                                 </div>
-                                <span class="help-text">Arbeidsgivers innskudd på all lønn opp til 12G (1 638 588 kr). Lovlig minimum: 2%, maks: 7%</span>
+                                <span class="help-text">Arbeidsgivers innskudd på all lønn opp til 12G (1 638 588 kr). Lovlig minimum: 2%, maks: 7%. Det gis ikke innskudd på lønn over 12G.</span>
                             </div>
 
                             <div class="form-group">
-                                <label for="new-pension-high">Pensjonssats 7,1G-12G</label>
+                                <label for="new-pension-high">Tilleggssats 7,1G-12G</label>
                                 <div class="input-wrapper">
                                     <input
                                         type="text"
@@ -452,7 +453,7 @@
                                     >
                                     <span class="input-suffix">%</span>
                                 </div>
-                                <span class="help-text">Ekstra innskudd på lønn mellom 7,1G og 12G (969 498 - 1 638 588 kr). Maks: 25,1%</span>
+                                <span class="help-text">Ekstra innskudd på lønn mellom 7,1G og 12G (969 498 - 1 638 588 kr), i tillegg til grunnsatsen. Ingen lovlig minimum, maks: 18,1%</span>
                             </div>
                         </div>
                     </div>
@@ -468,10 +469,13 @@
     </div>
 
     <script>
-        // Validation rules
+        // Innskuddsgrenser etter innskuddspensjonsloven § 5-3:
+        //   Grunnsats:    maks 7% av lønn 0-12G (OTP-minimum 2% siden 2022)
+        //   Tilleggssats: maks 18,1% ekstra av lønn 7,1G-12G (ingen lovlig minimum)
+        // Satsene legges sammen på lønn mellom 7,1G og 12G, som gir maks 25,1% der.
         const VALIDATION_RULES = {
-            'pension-low': { min: 2, max: 7, label: 'Pensjonssats 0-7,1G' },
-            'pension-high': { min: 0, max: 25.1, label: 'Pensjonssats 7,1G-12G' }
+            'pension-low': { min: 2, max: 7, label: 'Grunnsats 0-12G' },
+            'pension-high': { min: 0, max: 18.1, label: 'Tilleggssats 7,1G-12G' }
         };
 
         // Load saved data on page load
@@ -539,9 +543,10 @@
             value = value.replace(',', '.');
 
             // Only allow one decimal point
-            const parts = value.split('.');
+            let parts = value.split('.');
             if (parts.length > 2) {
                 value = parts[0] + '.' + parts.slice(1).join('');
+                parts = value.split('.'); // re-split so the decimal limit below sees the merged value
             }
 
             // Limit to one decimal place
