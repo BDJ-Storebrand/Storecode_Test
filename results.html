@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Din kompensasjonssammenligning - Storebrand</title>
+    <link rel="stylesheet" href="tokens.css">
     <style>
         * {
             margin: 0;
@@ -14,13 +15,13 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
-            color: #1a1a1a;
-            background-color: #fffffa;
+            color: var(--color-text-primary);
+            background-color: var(--color-surface-page);
         }
 
         /* Header/Navigation */
         header {
-            background: white;
+            background: var(--color-surface-card);
             padding: 20px;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
         }
@@ -39,7 +40,7 @@
         }
 
         .back-link {
-            color: #560000;
+            color: var(--color-brand-deep);
             text-decoration: none;
             font-weight: 600;
             display: flex;
@@ -48,7 +49,7 @@
         }
 
         .back-link:hover {
-            color: #da291c;
+            color: var(--color-brand);
         }
 
         /* Main Container */
@@ -65,14 +66,14 @@
         }
 
         .page-title h1 {
-            color: #560000;
+            color: var(--color-brand-deep);
             font-size: 2.5em;
             margin-bottom: 15px;
             font-weight: 600;
         }
 
         .page-title p {
-            color: #4a4a4a;
+            color: var(--color-text-secondary);
             font-size: 1.1em;
         }
 
@@ -82,7 +83,7 @@
         }
 
         .summary-section h2 {
-            color: #560000;
+            color: var(--color-brand-deep);
             font-size: 2em;
             margin-bottom: 30px;
             font-weight: 600;
@@ -97,15 +98,15 @@
         }
 
         .summary-card {
-            background: white;
+            background: var(--color-surface-card);
             padding: 30px;
             border-radius: 4px;
-            border-left: 4px solid #da291c;
+            border-left: 4px solid var(--color-brand);
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
         }
 
         .summary-card h3 {
-            color: #560000;
+            color: var(--color-brand-deep);
             font-size: 1.3em;
             margin-bottom: 20px;
             font-weight: 600;
@@ -115,7 +116,7 @@
             display: flex;
             justify-content: space-between;
             padding: 12px 0;
-            border-bottom: 1px solid #e5e5e5;
+            border-bottom: 1px solid var(--color-border-subtle);
         }
 
         .summary-row:last-child {
@@ -127,25 +128,25 @@
         }
 
         .summary-label {
-            color: #4a4a4a;
+            color: var(--color-text-secondary);
         }
 
         .summary-label-detail {
             display: block;
             font-size: 0.85em;
-            color: #6b6b6b;
+            color: var(--color-text-muted);
             margin-top: 3px;
             font-weight: 400;
         }
 
         .summary-value {
-            color: #560000;
+            color: var(--color-brand-deep);
             font-weight: 600;
         }
 
         /* Pension savings calculation accordion */
         .pension-accordion {
-            border-bottom: 1px solid #e5e5e5;
+            border-bottom: 1px solid var(--color-border-subtle);
         }
 
         .pension-accordion-toggle {
@@ -159,13 +160,13 @@
             margin: 0;
             font-family: inherit;
             font-size: 0.8em;
-            color: #8a6d6d;
+            color: var(--color-text-warm-muted);
             cursor: pointer;
             transition: color 0.2s;
         }
 
         .pension-accordion-toggle:hover {
-            color: #da291c;
+            color: var(--color-brand);
         }
 
         .pension-accordion-chevron {
@@ -189,7 +190,7 @@
         }
 
         .pension-accordion-inner {
-            background: #faf3f1;
+            background: var(--color-surface-raised);
             border-radius: 4px;
             padding: 14px 16px;
             margin-bottom: 12px;
@@ -205,75 +206,75 @@
         }
 
         .pension-calc-row .calc-label {
-            color: #4a4a4a;
+            color: var(--color-text-secondary);
         }
 
         .pension-calc-row .calc-detail {
             display: block;
             font-size: 0.9em;
-            color: #8a8a8a;
+            color: var(--color-text-faint);
             margin-top: 2px;
             font-weight: 400;
         }
 
         .pension-calc-row .calc-value {
-            color: #560000;
+            color: var(--color-brand-deep);
             font-weight: 600;
             white-space: nowrap;
         }
 
         .pension-calc-row.calc-total {
-            border-top: 1px solid #e3d3d0;
+            border-top: 1px solid var(--color-border-warm);
             margin-top: 4px;
             padding-top: 10px;
             font-weight: 600;
         }
 
         .pension-calc-row.calc-total .calc-label {
-            color: #560000;
+            color: var(--color-brand-deep);
         }
 
         .pension-calc-note {
             font-size: 0.75em;
-            color: #a08d8d;
+            color: var(--color-text-warm-faint);
             margin-top: 10px;
             line-height: 1.4;
         }
 
         /* Difference Card */
         .difference-card {
-            background: linear-gradient(135deg, #f9ece8 0%, #fac8c8 100%);
+            background: linear-gradient(135deg, var(--color-surface-accent) 0%, var(--color-brand-pale) 100%);
             padding: 40px;
             border-radius: 4px;
-            border-left: 4px solid #da291c;
+            border-left: 4px solid var(--color-brand);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
             text-align: center;
         }
 
         .difference-card h3 {
-            color: #560000;
+            color: var(--color-brand-deep);
             font-size: 1.5em;
             margin-bottom: 15px;
             font-weight: 600;
         }
 
         .difference-amount {
-            color: #560000;
+            color: var(--color-brand-deep);
             font-size: 3em;
             font-weight: 700;
             margin-bottom: 10px;
         }
 
         .difference-amount.positive {
-            color: #00a876;
+            color: var(--color-positive);
         }
 
         .difference-amount.negative {
-            color: #da291c;
+            color: var(--color-brand);
         }
 
         .difference-percentage {
-            color: #4a4a4a;
+            color: var(--color-text-secondary);
             font-size: 1.2em;
         }
 
@@ -283,7 +284,7 @@
         }
 
         .projection-section h2 {
-            color: #560000;
+            color: var(--color-brand-deep);
             font-size: 2em;
             margin-bottom: 15px;
             font-weight: 600;
@@ -292,14 +293,14 @@
 
         .projection-subtitle {
             text-align: center;
-            color: #4a4a4a;
+            color: var(--color-text-secondary);
             margin-bottom: 30px;
             font-size: 0.95em;
         }
 
         /* Chart Container */
         .chart-container {
-            background: white;
+            background: var(--color-surface-card);
             padding: 40px;
             border-radius: 4px;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
@@ -314,7 +315,7 @@
 
         /* Table */
         .projection-table {
-            background: white;
+            background: var(--color-surface-card);
             border-radius: 4px;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
             overflow: hidden;
@@ -326,8 +327,8 @@
         }
 
         thead {
-            background: #560000;
-            color: white;
+            background: var(--color-brand-deep);
+            color: var(--color-text-on-brand);
         }
 
         th {
@@ -341,7 +342,7 @@
         }
 
         tbody tr {
-            border-bottom: 1px solid #e5e5e5;
+            border-bottom: 1px solid var(--color-border-subtle);
         }
 
         tbody tr:last-child {
@@ -349,7 +350,7 @@
         }
 
         tbody tr:nth-child(even) {
-            background: #f9ece8;
+            background: var(--color-surface-accent);
         }
 
         td {
@@ -359,11 +360,11 @@
         td.number {
             text-align: right;
             font-weight: 600;
-            color: #560000;
+            color: var(--color-brand-deep);
         }
 
         .highlight-row {
-            background: #fac8c8 !important;
+            background: var(--color-brand-pale) !important;
             font-weight: 600;
         }
 
@@ -392,27 +393,27 @@
         }
 
         .btn-primary {
-            background-color: #da291c;
-            color: white;
+            background-color: var(--color-brand);
+            color: var(--color-text-on-brand);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
         .btn-primary:hover {
-            background-color: #ed554e;
+            background-color: var(--color-brand-hover);
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .btn-secondary {
-            background-color: white;
-            color: #560000;
-            border: 2px solid #da291c;
+            background-color: var(--color-surface-card);
+            color: var(--color-brand-deep);
+            border: 2px solid var(--color-brand);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .btn-secondary:hover {
-            background-color: #fac8c8;
-            border-color: #ed554e;
+            background-color: var(--color-brand-pale);
+            border-color: var(--color-brand-hover);
         }
 
         /* Responsive */
@@ -830,7 +831,7 @@
                     <td>${year}</td>
                     <td class="number">${formatCurrency(currentTotal)}</td>
                     <td class="number">${formatCurrency(newTotal)}</td>
-                    <td class="number" style="color: ${diff >= 0 ? '#00a876' : '#da291c'}">${diff >= 0 ? '+' : ''}${formatCurrency(diff)}</td>
+                    <td class="number" style="color: ${diff >= 0 ? 'var(--color-positive)' : 'var(--color-negative)'}">${diff >= 0 ? '+' : ''}${formatCurrency(diff)}</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -839,13 +840,38 @@
             document.getElementById('total-current-5yr').textContent = formatCurrency(totalCurrent);
             document.getElementById('total-new-5yr').textContent = formatCurrency(totalNew);
             document.getElementById('total-diff-5yr').textContent = (totalDiff >= 0 ? '+' : '') + formatCurrency(totalDiff);
-            document.getElementById('total-diff-5yr').style.color = totalDiff >= 0 ? '#00a876' : '#da291c';
+            document.getElementById('total-diff-5yr').style.color =
+                totalDiff >= 0 ? 'var(--color-positive)' : 'var(--color-negative)';
+        }
+
+        // Resolve a design token from tokens.css to a concrete colour string.
+        // The canvas 2D context cannot consume var(), so tokens are read off :root.
+        function cssVar(name) {
+            const value = getComputedStyle(document.documentElement)
+                .getPropertyValue(name)
+                .trim();
+            if (!value) {
+                // Canvas silently ignores an empty fillStyle/strokeStyle, which
+                // would draw the chart in the wrong colour with no visible error.
+                console.warn(`Design token ${name} is undefined — is tokens.css loaded?`);
+            }
+            return value;
         }
 
         // Draw chart
         function drawChart(data) {
             const canvas = document.getElementById('projectionChart');
             const ctx = canvas.getContext('2d');
+
+            const chartColor = {
+                grid: cssVar('--chart-grid'),
+                axis: cssVar('--chart-axis'),
+                label: cssVar('--chart-label'),
+                currentFill: cssVar('--chart-series-current-fill'),
+                currentStroke: cssVar('--chart-series-current-stroke'),
+                newFill: cssVar('--chart-series-new-fill'),
+                newStroke: cssVar('--chart-series-new-stroke'),
+            };
 
             // Set canvas size
             const container = canvas.parentElement;
@@ -870,7 +896,7 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Draw grid lines
-            ctx.strokeStyle = '#e5e5e5';
+            ctx.strokeStyle = chartColor.grid;
             ctx.lineWidth = 1;
             for (let i = 0; i <= 5; i++) {
                 const y = paddingTop + (chartHeight / 5) * i;
@@ -881,7 +907,7 @@
             }
 
             // Draw axes
-            ctx.strokeStyle = '#560000';
+            ctx.strokeStyle = chartColor.axis;
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(paddingLeft, paddingTop);
@@ -915,11 +941,11 @@
                 const currentJobX = groupCenterX - columnWidth - (columnGap / 2);
                 const currentJobY = getY(currentJobValue);
 
-                ctx.fillStyle = '#B20000';
+                ctx.fillStyle = chartColor.currentFill;
                 ctx.fillRect(currentJobX, currentJobY, columnWidth, currentJobHeight);
 
                 // Add subtle border
-                ctx.strokeStyle = '#560000';
+                ctx.strokeStyle = chartColor.currentStroke;
                 ctx.lineWidth = 1;
                 ctx.strokeRect(currentJobX, currentJobY, columnWidth, currentJobHeight);
 
@@ -929,17 +955,17 @@
                 const newJobX = groupCenterX + (columnGap / 2);
                 const newJobY = getY(newJobValue);
 
-                ctx.fillStyle = '#ffdfdf';
+                ctx.fillStyle = chartColor.newFill;
                 ctx.fillRect(newJobX, newJobY, columnWidth, newJobHeight);
 
                 // Add subtle border
-                ctx.strokeStyle = '#B20000';
+                ctx.strokeStyle = chartColor.newStroke;
                 ctx.lineWidth = 1;
                 ctx.strokeRect(newJobX, newJobY, columnWidth, newJobHeight);
             });
 
             // Draw labels
-            ctx.fillStyle = '#560000';
+            ctx.fillStyle = chartColor.label;
             ctx.font = '14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
             ctx.textAlign = 'center';
 
@@ -966,21 +992,21 @@
             const legendY = 25;
             const legendX = paddingLeft;
 
-            ctx.fillStyle = '#B20000';
+            ctx.fillStyle = chartColor.currentFill;
             ctx.fillRect(legendX, legendY - 8, 20, 12);
-            ctx.strokeStyle = '#560000';
+            ctx.strokeStyle = chartColor.currentStroke;
             ctx.lineWidth = 1;
             ctx.strokeRect(legendX, legendY - 8, 20, 12);
-            ctx.fillStyle = '#560000';
+            ctx.fillStyle = chartColor.label;
             ctx.textAlign = 'left';
             ctx.fillText('Nåværende jobb', legendX + 30, legendY);
 
-            ctx.fillStyle = '#ffdfdf';
+            ctx.fillStyle = chartColor.newFill;
             ctx.fillRect(legendX + 180, legendY - 8, 20, 12);
-            ctx.strokeStyle = '#B20000';
+            ctx.strokeStyle = chartColor.newStroke;
             ctx.lineWidth = 1;
             ctx.strokeRect(legendX + 180, legendY - 8, 20, 12);
-            ctx.fillStyle = '#560000';
+            ctx.fillStyle = chartColor.label;
             ctx.fillText('Nytt tilbud', legendX + 210, legendY);
         }
 

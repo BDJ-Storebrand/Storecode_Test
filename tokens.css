@@ -1,0 +1,68 @@
+/* ==========================================================================
+   Design tokens
+   --------------------------------------------------------------------------
+   Single source of truth for colour across index.html, calculator.html and
+   results.html. No page should contain a raw hex value; everything goes
+   through a token below.
+
+   NAMING: these are project-local names, deliberately NOT the names used by
+   Storebrand's Pretzel design system (formerly Storeblocks). If this project
+   later adopts Pretzel, only the values in this file need to change — the
+   pages themselves reference tokens and stay untouched.
+
+   VALUES: carried over verbatim from the previous hardcoded hex values, so
+   this file is a pure refactor with no intended visual change.
+   ========================================================================== */
+
+:root {
+    /* ---- Brand red ramp ------------------------------------------------ */
+    --color-brand-deep: #560000;    /* hero, footer, CTA band, headings, chart axis */
+    --color-brand-strong: #b20000;  /* chart series fill, error text on white */
+    --color-brand: #da291c;         /* primary action, accents, focus, negative values */
+    --color-brand-hover: #ed554e;   /* hover state for primary action */
+    --color-brand-pale: #fac8c8;    /* secondary action hover, link on dark, highlight */
+    --color-brand-paler: #ffdfdf;   /* chart series fill (second series) */
+    --color-brand-palest: #fff5f5;  /* input focus background */
+
+    /* ---- Warm neutrals ------------------------------------------------- */
+    --color-surface-page: #fffffa;    /* page background */
+    --color-surface-accent: #f9ece8;  /* tinted section / info box */
+    --color-surface-raised: #faf3f1;  /* subtle raised panel */
+    --color-border-warm: #e3d3d0;     /* divider inside tinted cards */
+    --color-text-warm-muted: #8a6d6d;
+    --color-text-warm-faint: #a08d8d;
+    --color-text-placeholder: #bdb6a8;
+
+    /* ---- Greys ---------------------------------------------------------- */
+    --color-text-primary: #1a1a1a;    /* body copy */
+    --color-text-secondary: #4a4a4a;  /* paragraphs, table cells */
+    --color-text-muted: #6b6b6b;
+    --color-text-subtle: #7f7f7f;
+    --color-text-faint: #8a8a8a;
+    --color-border-input: #c0c0c0;
+    --color-border-subtle: #e5e5e5;   /* dividers, chart grid */
+    --color-surface-card: #ffffff;
+
+    /* ---- Status --------------------------------------------------------- */
+    --color-positive: #00a876;
+    --color-negative: var(--color-brand);
+    --color-disabled: var(--color-border-input);
+
+    /* ---- Chart ----------------------------------------------------------
+       Consumed from JavaScript via getComputedStyle() in results.html.
+       Canvas cannot resolve var() itself, so these must stay resolvable
+       against :root.                                                      */
+    --chart-grid: var(--color-border-subtle);
+    --chart-axis: var(--color-brand-deep);
+    --chart-label: var(--color-brand-deep);
+    --chart-series-current-fill: var(--color-brand-strong);
+    --chart-series-current-stroke: var(--color-brand-deep);
+    --chart-series-new-fill: var(--color-brand-paler);
+    --chart-series-new-stroke: var(--color-brand-strong);
+
+    /* ---- Foreground on brand surfaces ---------------------------------- */
+    --color-text-on-brand: #ffffff;
+    --color-text-on-brand-muted: rgba(255, 255, 255, 0.85);
+
+
+}
