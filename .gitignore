@@ -1,0 +1,6 @@
+# Local tooling / scratch
+.storecode/
+Storecode_Test/
+
+# OS files
+.DS_Store
