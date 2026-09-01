@@ -141,6 +141,32 @@
             background-color: var(--color-brand-palest);
         }
 
+        /* Low-intensity informational alert, shown inline beneath an input.
+           Deliberately quieter than .error-text (brand red, bold) and .info-box
+           (heavy brand-red left border): this is an FYI, not a problem to fix. */
+        .form-group .info-alert {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            background: var(--color-surface-raised);
+            border: 1px solid var(--color-border-warm);
+            border-radius: 4px;
+            padding: 10px 12px;
+            margin-top: 10px;
+            color: var(--color-text-secondary);
+            font-size: 0.85em;
+            line-height: 1.5;
+        }
+
+        /* Needed because display:flex above would otherwise beat [hidden]. */
+        .form-group .info-alert[hidden] {
+            display: none;
+        }
+
+        .info-alert-icon {
+            flex-shrink: 0;
+        }
+
         .form-group input {
             width: 100%;
             padding: 12px 16px;
@@ -361,6 +387,10 @@
                             <span class="input-suffix">kr</span>
                         </div>
                         <span class="help-text">Din totale brutto årslønn før skatt</span>
+                        <p class="info-alert" role="status" hidden>
+                            <span class="info-alert-icon" aria-hidden="true">ℹ️</span>
+                            <span class="info-alert-text"></span>
+                        </p>
                     </div>
 
                     <div class="pension-group">
@@ -420,6 +450,10 @@
                             <span class="input-suffix">kr</span>
                         </div>
                         <span class="help-text">Brutto årslønn i det nye tilbudet før skatt</span>
+                        <p class="info-alert" role="status" hidden>
+                            <span class="info-alert-icon" aria-hidden="true">ℹ️</span>
+                            <span class="info-alert-text"></span>
+                        </p>
                     </div>
 
                     <div class="pension-group">
@@ -479,10 +513,21 @@
             'pension-high': { min: 0, max: 18.1, label: 'Tilleggssats 7,1G-12G' }
         };
 
+        // Grunnbeløpet (G) per 1. mai 2026. Må holdes i synk med G_VALUE_2026
+        // i results.html — der ligger selve pensjonsberegningen.
+        const G_VALUE_2026 = 136549;
+
+        // 12G er taket for lønn som gir innskudd. Lønn over dette gir ingen
+        // pensjonsopptjening, og utløser informasjonsvarselet under lønnsfeltet.
+        const G_12 = G_VALUE_2026 * 12;
+
         // Load saved data on page load
         window.addEventListener('DOMContentLoaded', () => {
+            initSalaryCapNotices();
             loadFormData();
             setupInputHandlers();
+            // Skjemaet husker tidligere verdier, så varselet må vurderes med én gang.
+            refreshSalaryCapNotices();
         });
 
         const form = document.getElementById('compensationForm');
@@ -498,6 +543,7 @@
                 input.addEventListener('input', (e) => {
                     if (inputType === 'salary') {
                         formatSalaryInput(e.target);
+                        updateSalaryCapNotice(e.target);
                     } else if (inputType === 'pension-low' || inputType === 'pension-high') {
                         formatPensionInput(e.target);
                     }
@@ -506,6 +552,9 @@
                 // Validate on blur
                 input.addEventListener('blur', (e) => {
                     validateInput(e.target);
+                    if (inputType === 'salary') {
+                        updateSalaryCapNotice(e.target);
+                    }
                     saveFormData();
                 });
             });
@@ -647,6 +696,35 @@
             }
         }
 
+        // Format a number with space thousand separators, e.g. 1638588 -> "1 638 588"
+        function formatAmount(value) {
+            return String(Math.round(value)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        }
+
+        // Write the notice copy once, derived from G_12, so the amount in the text
+        // can never drift away from the constant the calculation uses.
+        function initSalaryCapNotices() {
+            const message = `Lønn over ${formatAmount(G_12)} kr (12G) gir ikke pensjonsinnskudd. `
+                + `Vi tar med hele lønnen i totalen, men pensjonssparingen stopper ved 12G.`;
+
+            document.querySelectorAll('.info-alert-text').forEach(el => {
+                el.textContent = message;
+            });
+        }
+
+        // Show the notice only while the salary is above the 12G ceiling.
+        function updateSalaryCapNotice(input) {
+            const notice = input.closest('.form-group').querySelector('.info-alert');
+            if (!notice) return;
+
+            const value = parseInputValue(input);
+            notice.hidden = !(value > G_12);
+        }
+
+        function refreshSalaryCapNotices() {
+            form.querySelectorAll('input[data-type="salary"]').forEach(updateSalaryCapNotice);
+        }
+
         // Form submission
         form.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -679,6 +757,9 @@
                 // Clear all errors
                 const inputs = form.querySelectorAll('input');
                 inputs.forEach(input => clearError(input));
+
+                // form.reset() fires no input events, so hide the notices explicitly.
+                refreshSalaryCapNotices();
             }
         });
 
