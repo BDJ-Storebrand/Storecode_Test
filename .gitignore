@@ -1,6 +1,7 @@
 # Local tooling / scratch
 .storecode/
 Storecode_Test/
+_preview_tmp.html
 
 # OS files
 .DS_Store
